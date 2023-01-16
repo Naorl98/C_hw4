@@ -331,7 +331,7 @@ int shortsPath_cmd(pnode head)
     }
     dijkastra((*start), dist);
 
-    printf("Dijsktra shortest path: %d\n", dist[dest]);
+    printf("Dijsktra shortest path: %d \n", dist[dest]);
 
     GET int letter = command[0];
     free(command);
@@ -390,7 +390,7 @@ int TSP_cmd(pnode head)
         fact *= k + 1;
     }
     if (len == 1)
-        printf("TSP shortest path: 0\n");
+        printf("TSP shortest path: 0 \n");
     int permo[720][6];
     int ins = 0;
     int *index = &ins;
