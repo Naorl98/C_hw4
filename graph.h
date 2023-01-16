@@ -30,14 +30,14 @@ void add(pqueue *, pqueue );
 //Queue end
 
 pnode findNode(pnode *, int);
-int getCommand(char *);
-int build_graph_cmd(pnode *head);
-int insert_node_cmd(pnode *head);
-int delete_node_cmd(pnode *head, int);
+void getCommand(char *);
+void build_graph_cmd(pnode *head, int);
+void insert_node_cmd(pnode *head);
+void delete_node_cmd(pnode *head, int);
 void swap(int *, int *);
 void prmot(int *, int , int , int [720][6], int *);
 void deleteGraph_cmd(pnode* head);
-int shortsPath_cmd(pnode head);
-int TSP_cmd(pnode head);
+void shortsPath_cmd(pnode head);
+void TSP_cmd(pnode head);
 
 #endif
