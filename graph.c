@@ -5,9 +5,12 @@
 #include <stddef.h>
 #include <resolv.h>
 #include <malloc.h>
-#define GET if (getCommand(command) == EOF) return EOF;
+#define GET                         \
+    if (getCommand(command) == EOF) \
+        return EOF;
 int charindex;
-int length ;
+int length;
+
 // Queue Start
 
 void add(pqueue *headQ, pqueue enter)
@@ -45,14 +48,14 @@ pqueue pop(pqueue *headQ)
 
 pnode findNode(pnode *head, int num)
 {
-    pnode *t = head;
-    while (*t)
+    pnode t = *head;
+    while (t)
     {
-        if ((**t).node_num == num)
+        if (t->node_num == num)
         {
-            return *t;
+            return t;
         }
-        t = &((*t)->next);
+        t = t->next;
     }
     return 0;
 }
@@ -112,116 +115,109 @@ int getCommand(char *com)
     return 0;
 }
 int build_graph_cmd(pnode *head)
-{    
-    
+{
+
     if ((*head) != NULL)
     {
-        pnode *t1 = &(*head);
+        pnode *t1 = head;
         pnode newhead = NULL;
         deleteGraph_cmd(t1);
         (*head) = newhead;
     }
-    pnode *t = &(*head);
+    int getnum = 0;
+    pnode t = *head;
     char *command = malloc(sizeof(char));
-    GET 
+    GET
     int len = atoi(command);
 
     length = len;
-    for (int i = 0; i < len; i++)
+    pnode create = NULL;
+    for (int i = len-1; i >=0; i--)
     {
-        (*t) = (pnode)malloc(sizeof(node));
-        (**t).node_num = i;
-        t = &((*t)->next);
+        pnode new = (pnode)malloc(sizeof(node));
+        new->node_num = i;
+        new->edges = NULL;
+        new->next = create;
+        create = new;
     }
-    GET
-
-        if (command[0] != 'n')
-    {
-        printf("Wrong char - need to be n\n");
-        exit(0);
-    }
-    GET
-
-    pnode point = findNode(head, atoi(command));
-    t = &point;
-    pedge *edgeH = &((*t)->edges);
+    (*head) = create;
+    pnode new = NULL;
+    pedge prevEdge = NULL;
     while (1)
     {
-        GET if (command[0] >= 65 && command[0] <= 90)
+        pedge newEdge = NULL;
+        GET 
+        if (command[0] >= 65 && command[0] <= 90)
         {
             int letter = command[0];
             free(command);
             return letter;
         }
-        if (command[0] == 'n')
-        {
+        if(command[0] == 'n'){ 
             GET
-                point = findNode(head, atoi(command));
-            t = &point;
-            edgeH = &((*t)->edges);
+            int numOfPoint = atoi(command);
+            pnode newPoint = findNode(head,numOfPoint);
+            new = newPoint;
+            prevEdge = NULL;
         }
-        else
-        {
-            if (!*edgeH)
-            {
-                (*edgeH) = (pedge)malloc(sizeof(pedge));
-                (*edgeH)->next = NULL;
-            }
-            pnode to = findNode(head, atoi(command));
-            (*edgeH)->endpoint = &(*to);
-            GET(*edgeH)->weight = atoi(command);
-            edgeH = &((*edgeH)->next);
-        }
-    }
+        else{
+        newEdge = (pedge)malloc(sizeof(pedge));
+        int num1 = atoi(command);
+        pnode to = findNode(head, num1);
+        newEdge->endpoint = to;
+        GET
+        int num2 = atoi(command);
+        newEdge->weight = num2;
+        newEdge->next = prevEdge;
+        new->edges = newEdge;
+        prevEdge = newEdge;
+    }}
 }
 int insert_node_cmd(pnode *head)
 {
     char *command = malloc(sizeof(char));
-    GET int num = atoi(command);
-    pnode *t = &(*head);
-    while (*t)
-    {
-        if ((**t).node_num == num)
-        {
-            pedge *p = &((*t)->edges);
-            while (*p)
-            {
-                pedge dP = (*p)->next;
-                free(*p);
-                p = &dP;
-            }
-            ((*t)->edges) = NULL;
-            break;
+    GET 
+    int num = atoi(command);
+    pnode new = findNode(head,num);
+    if(new){
+        pedge theE = new->edges;
+        while(theE){
+            pedge prev = theE;
+            theE = theE->next; 
+            free(prev);
         }
-        t = &((*t)->next);
     }
-    if (!*t)
-    {
+    else{
+        new = (pnode)malloc(sizeof(node));
+        new->node_num =num;
+        new->next = NULL;
+        new->edges = NULL;
+        pnode last = findNode(head,length-1);
         length = num + 1;
-        (*t) = malloc(sizeof(node));
-        (**t).node_num = num;
+        last->next = new;
     }
-    pedge *edgeH = &((*t)->edges);
+    pedge prevEdge = NULL;
     while (1)
     {
-        GET if (command[0] >= 65 && command[0] <= 90)
+        pedge newEdge = NULL;
+
+        GET 
+        if (command[0] >= 65 && command[0] <= 90)
         {
             int letter = command[0];
             free(command);
             return letter;
         }
-        if (!*edgeH)
-        {
-            (*edgeH) = (pedge)malloc(sizeof(pedge));
-            (*edgeH)->next = NULL;
-        }
-        num = atoi(command);
-        pnode to = findNode(head, num);
-        (*edgeH)->endpoint = to;
+        newEdge = (pedge)malloc(sizeof(pedge));
+        int num1 = atoi(command);
+        pnode to = findNode(head, num1);
+        newEdge->endpoint = to;
         GET
-            num = atoi(command);
-        (*edgeH)->weight = num;
-        edgeH = &((*edgeH)->next);
+        int num2 = atoi(command);
+        newEdge->weight = num2;
+        newEdge->next = prevEdge;
+        new->edges = newEdge;
+        prevEdge = newEdge;
     }
 }
 
@@ -236,64 +232,61 @@ int delete_node_cmd(pnode *head, int all)
             num = atoi(command);
     }
     else
-        num = all;
-    pnode *t = &(*head);
-    pnode *prev = &(*head);
-    while (*t)
+    num = all;
+    pnode delED = *head;
+ 
+    while(delED)
     {
-        if ((**t).node_num == num)
-        {
-            break;
-        }
-        prev = &(*t);
-        t = &((*t)->next);
-    }
-    if (*t)
-    {
-        if (num == length - 1)
-            length--;
-        pedge *delE = &((*t)->edges);
-        pedge *save = &((*t)->edges->next);
-
-        while (*delE)
-        {
-            free(*delE);
-            delE = &(*save);
-            save = &((*save)->next);
-        }
-        pnode delN = *t;
-        pnode new = &(*((*t)->next));
-        if ((*prev)->node_num == num)
-            (*prev) = new;
-        else
-            (*prev)->next = new;
-        t = &(*head);
-        while (*t)
-        {
-            delE = &((*t)->edges);
-            save = &((*t)->edges->next);
-            while (*delE)
-            {
-                if (((*delE)->endpoint) && ((*delE)->endpoint->node_num) == num)
-                {
-                    pedge new2 = &(*((*delE)->next));
-                    (*delE) = new2;
-                }
-                else
-                {
-                    delE = &(*save);
-                    save = &((*save)->next);
-                }
+        
+        if(delED->node_num != num && delED->edges){
+            pedge delEdge = delED->edges;
+            if(delEdge->endpoint->node_num == num){
+                pedge deleted = delEdge;
+                delED->edges = delEdge->next;
+                free(deleted);
             }
-            t = &((*t)->next);
+            else{
+            while(delEdge->next!= NULL){
+                if(delEdge->next->endpoint->node_num == num){
+                    pedge deleted = delEdge->next;
+                    delEdge->next = deleted->next;
+                    free(deleted);
+                    break;
+                }
+                delEdge = delEdge->next;
+            }}
         }
-        free(delN);
+        delED = delED->next;
     }
-    else
+
+    if (num == length - 1)
+        length--;
+    pnode t = *head;
+    pnode deleND = NULL;
+    if(t->node_num == num){
+        *head = t->next;
+        deleND = t;
+    }
+    else{
+
+        while(t->next){
+            if(t->next->node_num== num){
+                deleND = t->next;
+                t->next = deleND->next;
+                break;
+            }
+        t = t->next;
+        }
+    }
+    pedge delE = deleND->edges;
+    while (delE)
     {
-        printf("Not find Node number : %d\n", num);
-        return EOF;
+        pedge save = delE;
+        delE = delE->next;
+        free(save);
     }
+
+    free(deleND);
     if (all == -1)
     {
         GET int letter = command[0];
@@ -315,7 +308,6 @@ void deleteGraph_cmd(pnode *head)
 
 int shortsPath_cmd(pnode head)
 {
-
     char *command = malloc(sizeof(char));
     int dist[length];
     GET int source = atoi(command);
