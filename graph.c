@@ -427,38 +427,3 @@ int TSP_cmd(pnode head)
     free(command);
     return letter;
 }
-
-int main()
-{
-
-    pnode head = NULL;
-    int getx [2];
-    getx[0]= fgetc(stdin);
-    getx[1] =  fgetc(stdin);
-    int x = getx[0];
-    while (x != EOF)
-    {
-        if (x == 'A')
-        {
-            x = build_graph_cmd(&head);
-        }
-        else if (x == 'B')
-        {
-            x = insert_node_cmd(&head);
-        }
-        else if (x == 'D')
-        {
-            x = delete_node_cmd(&head, -1);
-        }
-        else if (x == 'S')
-        {
-            x = shortsPath_cmd(head);
-        }
-        else if (x == 'T')
-        {
-            x = TSP_cmd(head);
-        }
-    }
-    deleteGraph_cmd(pnode* head);
-    return 0;
-}
