@@ -6,8 +6,10 @@ int main()
 {
 
     pnode head;
-    int x = fgetc(stdin);
-
+    int[2] getX;
+    getX[0] = fgetc(stdin);
+    getX[1] = fgetc(stdin);
+    int x = getX[0];
     while (x != EOF)
     {
         if (x == 'A')
