@@ -5,10 +5,6 @@
 #include <stddef.h>
 #include <resolv.h>
 #include <malloc.h>
-#define GET                         \
-    if (getCommand(command) == EOF) \
-        return EOF;
-int charindex;
 int length;
 
 // Queue Start
@@ -93,92 +89,32 @@ void dijkastra(pnode head, int *dist)
     }
 }
 
-int getCommand(char *com)
+void build_graph_cmd(pnode *head, int setlen)
 {
-    int command;
-    memset(com, 0, (charindex + 1) * sizeof(int));
-    charindex = 0;
-    command = fgetc(stdin);
-    while (command != ' ' && command != '\n' && command != EOF)
-    {
-        com[charindex] = (char)command;
-        charindex++;
-        com = realloc(com, (charindex + 1) * sizeof(char));
-        command = fgetc(stdin);
-    }
-
-    if (command == EOF)
-    {
-        free(com);
-        return EOF;
-    }
-    return 0;
-}
-int build_graph_cmd(pnode *head)
-{
-
-    if ((*head) != NULL)
-    {
-        pnode *t1 = head;
-        pnode newhead = NULL;
-        deleteGraph_cmd(t1);
-        (*head) = newhead;
-    }
-    int getnum = 0;
-    pnode t = *head;
-    char *command = malloc(sizeof(char));
-    GET
-    int len = atoi(command);
-
-    length = len;
-    pnode create = NULL;
-    for (int i = len-1; i >=0; i--)
-    {
-        pnode new = (pnode)malloc(sizeof(node));
-        new->node_num = i;
-        new->edges = NULL;
-        new->next = create;
-        create = new;
-    }
-    (*head) = create;
-    pnode new = NULL;
+    length =setlen;
+    int getNum;
+    scanf("%d",&getNum);
+    pnode newPoint = findNode(head,getNum);
+    pnode new = newPoint;
     pedge prevEdge = NULL;
-    while (1)
+    while (scanf("%d",&getNum) == 1)
     {
         pedge newEdge = NULL;
-        GET 
-        if (command[0] >= 65 && command[0] <= 90)
-        {
-            int letter = command[0];
-            free(command);
-            return letter;
-        }
-        if(command[0] == 'n'){ 
-            GET
-            int numOfPoint = atoi(command);
-            pnode newPoint = findNode(head,numOfPoint);
-            new = newPoint;
-            prevEdge = NULL;
-        }
-        else{
         newEdge = (pedge)malloc(sizeof(pedge));
-        int num1 = atoi(command);
-        pnode to = findNode(head, num1);
+        pnode to = findNode(head, getNum);
         newEdge->endpoint = to;
-        GET
-        int num2 = atoi(command);
-        newEdge->weight = num2;
+        scanf("%d",&getNum);
+        newEdge->weight = getNum;
         newEdge->next = prevEdge;
         new->edges = newEdge;
         prevEdge = newEdge;
-    }}
+    }
 }
-int insert_node_cmd(pnode *head)
+void insert_node_cmd(pnode *head)
 {
-    char *command = malloc(sizeof(char));
-    GET 
-    int num = atoi(command);
-    pnode new = findNode(head,num);
+    int getNum;
+    scanf("%d",&getNum);
+    pnode new = findNode(head,getNum);
     if(new){
         pedge theE = new->edges;
         while(theE){
@@ -189,50 +125,39 @@ int insert_node_cmd(pnode *head)
     }
     else{
         new = (pnode)malloc(sizeof(node));
-        new->node_num =num;
+        new->node_num =getNum;
         new->next = NULL;
         new->edges = NULL;
         pnode last = findNode(head,length-1);
-        length = num + 1;
+        length = getNum + 1;
         last->next = new;
     }
     pedge prevEdge = NULL;
-    while (1)
+    while (scanf("%d",&getNum) == 1)
     {
         pedge newEdge = NULL;
 
-        GET 
-        if (command[0] >= 65 && command[0] <= 90)
-        {
-            int letter = command[0];
-            free(command);
-            return letter;
-        }
         newEdge = (pedge)malloc(sizeof(pedge));
-        int num1 = atoi(command);
-        pnode to = findNode(head, num1);
+        pnode to = findNode(head, getNum);
         newEdge->endpoint = to;
-        GET
-        int num2 = atoi(command);
-        newEdge->weight = num2;
+        scanf("%d",&getNum);
+        newEdge->weight = getNum;
         newEdge->next = prevEdge;
         new->edges = newEdge;
         prevEdge = newEdge;
     }
 }
 
-int delete_node_cmd(pnode *head, int all)
+void delete_node_cmd(pnode *head, int all)
 {
-    char *command;
-    int num = -1;
+    if((*head == NULL)) return;
+    int num;
     if (all == -1)
     {
-        command = malloc(sizeof(char));
-        GET
-            num = atoi(command);
+        scanf("%d",&num);
     }
     else
-    num = all;
+        num = all;
     pnode delED = *head;
  
     while(delED)
@@ -286,32 +211,31 @@ int delete_node_cmd(pnode *head, int all)
         free(save);
     }
 
-    free(deleND);
-    if (all == -1)
-    {
-        GET int letter = command[0];
-        free(command);
-        return letter;
-    }
-    return -2;
 }
 
 void deleteGraph_cmd(pnode *head)
 {
-    int x = -2;
-    if (*head && x == -2)
+
+    if (*head)
     {
         deleteGraph_cmd((&(*head)->next));
-        x = delete_node_cmd(head, (*head)->node_num);
+        delete_node_cmd(head, (*head)->node_num);
     }
 }
 
-int shortsPath_cmd(pnode head)
-{
-    char *command = malloc(sizeof(char));
+void shortsPath_cmd(pnode head)
+{   
+    int getNum = 0;
+    int source;
+    while(getNum ==0){
+        getNum = scanf("%d",&source);
+    }
+    int dest;
+    while(getNum ==0){
+        getNum = scanf("%d",&dest);
+    }
+
     int dist[length];
-    GET int source = atoi(command);
-    GET int dest = atoi(command);
     pnode *start = &head;
     while ((*start)->node_num != source)
     {
@@ -322,12 +246,7 @@ int shortsPath_cmd(pnode head)
         dist[i] = __INT_MAX__;
     }
     dijkastra((*start), dist);
-
     printf("Dijsktra shortest path: %d \n", dist[dest]);
-
-    GET int letter = command[0];
-    free(command);
-    return letter;
 }
 void swap(int *a, int *b)
 {
@@ -359,13 +278,13 @@ void prmot(int *arr, int start, int end, int sumbit[720][6], int *index)
         swap((arr + i), (arr + start));
     }
 }
-int TSP_cmd(pnode head)
+void TSP_cmd(pnode head)
 {
-    char *command = malloc(sizeof(char));
-    GET int len = atoi(command);
+
+    int len;
+    scanf("%d",&len);
     int dist[length];
     int numbers[len];
-    int num = 0;
     int fact = 1;
     int min = 0;
     int minall = __INT_MAX__;
@@ -375,10 +294,7 @@ int TSP_cmd(pnode head)
         dist[i] = __INT_MAX__;
     for (int k = 0; k < len; k++)
     {
-        GET
-            num = atoi(command);
-        numbers[k] = num;
-
+        scanf("%d",&numbers[k]);
         fact *= k + 1;
     }
     if (len == 1)
@@ -415,7 +331,4 @@ int TSP_cmd(pnode head)
         printf("TSP shortest path: -1 \n");
     else
         printf("TSP shortest path: %d \n", minall);
-    GET int letter = command[0];
-    free(command);
-    return letter;
 }
