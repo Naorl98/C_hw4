@@ -91,7 +91,7 @@ void dijkastra(pnode head, int *dist)
 
 void build_graph_cmd(pnode *head, int setlen)
 {
-    length =setlen;
+    length = setlen;
     int getNum;
     scanf("%d",&getNum);
     pnode newPoint = findNode(head,getNum);
@@ -225,15 +225,11 @@ void deleteGraph_cmd(pnode *head)
 
 void shortsPath_cmd(pnode head)
 {   
-    int getNum = 0;
+
     int source;
-    while(getNum ==0){
-        getNum = scanf("%d",&source);
-    }
+    scanf("%d",&source);
     int dest;
-    while(getNum ==0){
-        getNum = scanf("%d",&dest);
-    }
+    scanf("%d",&dest);
 
     int dist[length];
     pnode *start = &head;
