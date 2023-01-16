@@ -6,7 +6,7 @@ int main()
 {
 
     pnode head;
-    int[2] getX;
+    int getX[2];
     getX[0] = fgetc(stdin);
     getX[1] = fgetc(stdin);
     int x = getX[0];
