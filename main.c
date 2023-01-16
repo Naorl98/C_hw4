@@ -1,38 +1,53 @@
 #include <stdio.h>
 #include "graph.h"
 #include <stdlib.h>
-
 int main()
 {
-
-    pnode head;
-    int getX[2];
-    getX[0] = fgetc(stdin);
-    getX[1] = fgetc(stdin);
-    int x = getX[0];
-    while (x != EOF)
+    char x;
+    int lenGraph;
+    pnode head = NULL;
+    while (scanf("%c",&x) != EOF)
     {
-        if (x == 'A')
-        {
-            x = build_graph_cmd(&head);
-        }
-        else if (x == 'B')
-        {
-            x = insert_node_cmd(&head);
-        }
-        else if (x == 'D')
-        {
-            x = delete_node_cmd(&head, -1);
-        }
-        else if (x == 'S')
-        {
-            x = shortsPath_cmd(head);
-        }
-        else if (x == 'T')
-        {
-            x = TSP_cmd(head);
-        }
+        switch(x){
+        case 'A':
+        
+            deleteGraph_cmd(&head);
+            scanf("%d",&lenGraph);
+            pnode create = NULL;
+            for (int i = lenGraph-1; i >=0; i--){
+                pnode new = (pnode) malloc(sizeof(node));
+                new->node_num = i;
+                new->edges = NULL;
+                new->next = create;
+                create = new;
+            }
+            head = create;
+            break;
+    
+        case 'n':
+
+            build_graph_cmd(&head,lenGraph);
+            break;
+        case 'B':
+        
+            insert_node_cmd(&head);
+            break;
+        case 'D':
+        
+            delete_node_cmd(&head, -1);
+            break;
+        case 'S':
+        
+            shortsPath_cmd(head);
+            break;
+        case 'T':
+        
+            TSP_cmd(head);
+            break;
     }
+}
+
     deleteGraph_cmd(&head);
     return 0;
+
 }
