@@ -58,7 +58,7 @@ pnode findNode(pnode *head, int num)
 
 void dijkastra(pnode head, int *dist)
 {
-    pqueue pfirst = malloc(sizeof(queue));
+    pqueue pfirst = (pqueue)malloc(sizeof(queue));
     pfirst->point = head;
     pfirst->next = NULL;
     pfirst->priority = 0;
@@ -77,7 +77,7 @@ void dijkastra(pnode head, int *dist)
             if ((dist[Qnode->node_num] + newE->weight) < dist[newE->endpoint->node_num])
             {
                 dist[newE->endpoint->node_num] = dist[Qnode->node_num] + newE->weight;
-                pqueue pnew = malloc(sizeof(queue));
+                pqueue pnew =(pqueue) malloc(sizeof(queue));
                 pnew->point = newE->endpoint;
                 pnew->next = NULL;
                 pnew->priority = dist[newE->endpoint->node_num];
@@ -100,7 +100,7 @@ void build_graph_cmd(pnode *head, int setlen)
     while (scanf("%d",&getNum) == 1)
     {
         pedge newEdge = NULL;
-        newEdge = (pedge)malloc(sizeof(pedge));
+        newEdge = (pedge)malloc(sizeof(edge));
         pnode to = findNode(head, getNum);
         newEdge->endpoint = to;
         scanf("%d",&getNum);
@@ -148,16 +148,11 @@ void insert_node_cmd(pnode *head)
     }
 }
 
-void delete_node_cmd(pnode *head, int all)
+void delete_node_cmd(pnode *head)
 {
     if((*head == NULL)) return;
     int num;
-    if (all == -1)
-    {
-        scanf("%d",&num);
-    }
-    else
-        num = all;
+    scanf("%d",&num);
     pnode delED = *head;
  
     while(delED)
@@ -215,11 +210,22 @@ void delete_node_cmd(pnode *head, int all)
 
 void deleteGraph_cmd(pnode *head)
 {
+    if(head!=NULL||*head!=NULL) {
+    pnode delHead = *head;
+    while (delHead)
+    {   
+        pedge delHeadEd = delHead->edges;
+        while(delHeadEd){
+            pedge delEd = delHeadEd;
+            delHeadEd = delHeadEd->next;
+            free(delEd);
 
-    if (*head)
-    {
-        deleteGraph_cmd((&(*head)->next));
-        delete_node_cmd(head, (*head)->node_num);
+        }
+         pnode del = delHead;
+         delHead = delHead->next;
+         free(del);
+    }
+    *head=NULL;
     }
 }
 
