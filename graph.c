@@ -114,7 +114,7 @@ void insert_node_cmd(pnode *head)
 {
     int getNum;
     scanf("%d",&getNum);
-    pnode new = findNode(head,getNum);
+    pnode new= findNode(head,getNum);
     if(new){
         pedge theE = new->edges;
         while(theE){
@@ -136,8 +136,7 @@ void insert_node_cmd(pnode *head)
     while (scanf("%d",&getNum) == 1)
     {
         pedge newEdge = NULL;
-
-        newEdge = (pedge)malloc(sizeof(pedge));
+        newEdge = (pedge)malloc(sizeof(edge));
         pnode to = findNode(head, getNum);
         newEdge->endpoint = to;
         scanf("%d",&getNum);
@@ -146,6 +145,7 @@ void insert_node_cmd(pnode *head)
         new->edges = newEdge;
         prevEdge = newEdge;
     }
+    new->edges = prevEdge;
 }
 
 void delete_node_cmd(pnode *head)
@@ -157,7 +157,6 @@ void delete_node_cmd(pnode *head)
  
     while(delED)
     {
-        
         if(delED->node_num != num && delED->edges){
             pedge delEdge = delED->edges;
             if(delEdge->endpoint->node_num == num){
@@ -205,6 +204,7 @@ void delete_node_cmd(pnode *head)
         delE = delE->next;
         free(save);
     }
+    free(deleND);
 
 }
 
