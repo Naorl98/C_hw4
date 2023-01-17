@@ -33,7 +33,7 @@ pnode findNode(pnode *, int);
 void getCommand(char *);
 void build_graph_cmd(pnode *head, int);
 void insert_node_cmd(pnode *head);
-void delete_node_cmd(pnode *head, int);
+void delete_node_cmd(pnode *head);
 void swap(int *, int *);
 void prmot(int *, int , int , int [720][6], int *);
 void deleteGraph_cmd(pnode* head);
