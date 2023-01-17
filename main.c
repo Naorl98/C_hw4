@@ -5,7 +5,7 @@ int main()
 {
     char x;
     int lenGraph;
-    pnode head;
+    pnode head =NULL;
     pnode new;
     while (scanf("%c",&x) != EOF)
     {
