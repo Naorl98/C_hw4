@@ -5,7 +5,8 @@ int main()
 {
     char x;
     int lenGraph;
-    pnode head = NULL;
+    pnode head;
+    pnode new;
     while (scanf("%c",&x) != EOF)
     {
         switch(x){
@@ -15,7 +16,7 @@ int main()
             scanf("%d",&lenGraph);
             pnode create = NULL;
             for (int i = lenGraph-1; i >=0; i--){
-                pnode new = (pnode) malloc(sizeof(node));
+                 new = (pnode) malloc(sizeof(node));
                 new->node_num = i;
                 new->edges = NULL;
                 new->next = create;
@@ -34,7 +35,7 @@ int main()
             break;
         case 'D':
         
-            delete_node_cmd(&head, -1);
+            delete_node_cmd(&head);
             break;
         case 'S':
         
