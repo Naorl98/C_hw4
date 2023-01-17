@@ -211,8 +211,9 @@ void delete_node_cmd(pnode *head)
 void deleteGraph_cmd(pnode *head)
 {
     if(head!=NULL||*head!=NULL) {
-    pnode delHead = *head;
-    while (delHead)
+    pnode delHead; 
+    delHead = *head;
+    while (delHead!=NULL)
     {   
         pedge delHeadEd = delHead->edges;
         while(delHeadEd){
@@ -226,6 +227,7 @@ void deleteGraph_cmd(pnode *head)
          free(del);
     }
     *head=NULL;
+
     }
 }
 
